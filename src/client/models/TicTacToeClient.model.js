@@ -6,40 +6,47 @@ export class TicTacToeGameClient {
     constructor(
         webSocket,
         clientId,
+        gameId
     ){
         this.clientId = clientId
         this.webSocket = webSocket;
         this.myTurn = false;
         this.status = PENDING_START
+        this.gameId = gameId
         this.grid = new Array(9).fill(false)
         this.webSocket.onmessage = async (event) => {
             console.log(event)
-            //const receivedState = JSON.parse(await event.data.text())
             const receivedState = JSON.parse( event.data)
             this.updateState(receivedState)
         };
     }
 
-    create(){
-        this.gameId = 'some-game-id'
+    register(){
         this.webSocket.send(JSON.stringify({
-            type: 'CREATE',
-            gameId: 'some-game-id',
             clientId: this.clientId,
+            gameId: this.gameId,
+            type: 'REGISTER'
         }))
     }
 
-    join(gameId){
+    async join(gameId){
         this.gameId = gameId
-        this.webSocket.send(JSON.stringify({
-            type: 'JOIN',
-            clientId: this.clientId,
-            gameId
-        }))
+        const headers = new Headers()
+        headers.append("Content-Type", "application/json")
+        await fetch(`/join/${gameId}`, { 
+            method: 'post', 
+            body: JSON.stringify({clientId: this.clientId}), 
+            headers
+        })
+        this.register()
     }
 
     updateState(state){
+        if (state.type == 'TURN'){
+            this.myTurn = true
+        }
         this.status = state.status
+        this.grid = state.grid
         if (this.status == ACTIVE_TURN){
             // Update html ?
         }
@@ -47,15 +54,6 @@ export class TicTacToeGameClient {
 
     markSpot(number){
         if (this.grid[number]) return alert('Casilla ya usada')
-        this.grid[number] = true
-        this.status = AWAITING_TURN
-        const message = {
-            type: 'ACTION',
-            move: number,
-            clientId: this.clientId,
-            gameId: this.gameId
-        }
-        this.webSocket.send(JSON.stringify(message))
-        console.log(this.grid)
+        
     }
 }
