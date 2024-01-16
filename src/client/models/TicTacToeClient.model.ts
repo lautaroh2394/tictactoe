@@ -1,8 +1,17 @@
-const PENDING_START = 'PENDING_START'
-const AWAITING_TURN = 'AWAITING_TURN'
-const ACTIVE_TURN = 'ACTIVE_TURN'
+enum GameStatus {
+    PENDING_START = 'PENDING_START',
+    AWAITING_TURN = 'AWAITING_TURN',
+    ACTIVE_TURN = 'ACTIVE_TURN',
+}
 
 export class TicTacToeGameClient {
+    private clientId
+    private webSocket
+    public myTurn
+    private status
+    private gameId
+    private grid
+
     constructor(
         webSocket,
         clientId,
@@ -11,7 +20,7 @@ export class TicTacToeGameClient {
         this.clientId = clientId
         this.webSocket = webSocket;
         this.myTurn = false;
-        this.status = PENDING_START
+        this.status = GameStatus.PENDING_START
         this.gameId = gameId
         this.grid = new Array(9).fill(false)
         this.webSocket.onmessage = async (event) => {
@@ -47,7 +56,7 @@ export class TicTacToeGameClient {
         }
         this.status = state.status
         this.grid = state.grid
-        if (this.status == ACTIVE_TURN){
+        if (this.status == GameStatus.ACTIVE_TURN){
             // Update html ?
         }
     }

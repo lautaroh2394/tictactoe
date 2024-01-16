@@ -1,5 +1,4 @@
-import { WebSocketServer,WebSocket } from 'ws'
-import { TicTacToeServer } from './TicTacToeServer.model.js';
+import { WebSocketServer } from 'ws'
 
 function setUpWebSocketServer(server, gameList){
     const wsServer = new WebSocketServer({ noServer: true })
@@ -11,7 +10,7 @@ function setUpWebSocketServer(server, gameList){
       
       ws.on('message', (message) => {
         console.log(`ws: ${message}`)
-        const playerAction = JSON.parse(message)
+        const playerAction = JSON.parse(message.toString())
 
         if (playerAction.type == 'REGISTER'){
           const game = gameList.find(e => e.gameId == playerAction.gameId)
