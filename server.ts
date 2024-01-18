@@ -10,7 +10,8 @@ const port = 3000
 const gameList = new GameList()
 
 app.use(express.static(path.join(process.cwd(), 'public')))
-app.use(express.static(path.join(process.cwd(),'/dist/src/client')))
+app.use('/dist', express.static(path.join(process.cwd(),'dist')))
+app.use('/src', express.static(path.join(process.cwd(),'src')))
 app.use(express.json())
 
 const validateGameId = GenerateValidateGameIdMiddleware(gameList)

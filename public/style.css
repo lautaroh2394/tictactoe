@@ -95,3 +95,9 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+td {
+  width: 5em;
+  height: 5em;
+  background-color: gray;
+}

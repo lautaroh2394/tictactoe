@@ -2,7 +2,6 @@ import { WebSocketServer } from 'ws'
 
 function setUpWebSocketServer(server, gameList){
     const wsServer = new WebSocketServer({ noServer: true })
-    console.log(JSON.stringify(gameList))
     gameList.setWebServer(wsServer)
 
     wsServer.on('connection', (ws) => {
@@ -12,11 +11,13 @@ function setUpWebSocketServer(server, gameList){
         console.log(`ws: ${message}`)
         const playerAction = JSON.parse(message.toString())
 
+        /*
         if (playerAction.type == 'REGISTER'){
           const game = gameList.find(e => e.gameId == playerAction.gameId)
           const player = game.players.find(p => p.cliendId == playerAction.cliendId)
           player.socket = ws
         }
+        */
       });
     });
     
