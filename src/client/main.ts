@@ -1,6 +1,6 @@
 import { TicTacToeGameClient } from './models/TicTacToeClient.model.js';
 
-let socket = new WebSocket('ws://localhost:3000');
+let socket = new WebSocket('ws://'+ window.location.host);
 
 socket.onopen = () => {
     console.log('web socket connected')
@@ -17,8 +17,16 @@ socket.onerror = (error) => {
 socket.onmessage = async (event) => {
     console.log(event)
 };
+let clientId;
+if (window["cookieStore"]){
+    const clientIdCookie = await window["cookieStore"].get('clientId')
+    clientId = clientIdCookie.value
+}else {
+    const cookie = document["cookie"] as any
+    clientId = cookie.split('; ').map(c => c.split("=")).find(e => e[0] == 'clientId')[1]
+}
+    
 
-const clientId = crypto.randomUUID();
 window["clientId"] = clientId;
 
 const inviteButton = document.getElementById("inviteButton");

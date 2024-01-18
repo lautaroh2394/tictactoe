@@ -48,12 +48,12 @@ export class TicTacToeGameClient {
         this.gameId = gameId
         const headers = new Headers()
         headers.append("Content-Type", "application/json")
-        await fetch(`/join/${gameId}`, { 
+        const res = await fetch(`/join/${gameId}`, { 
             method: 'post', 
             body: JSON.stringify({clientId: this.clientId}), 
             headers
         })
-        this.register()
+        res.status == 200 && this.register()
     }
 
     updateState(state){

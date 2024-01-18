@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import express from 'express'
 import * as path from 'path'
 import { setUpWebSocketServer } from './src/server/web-socket.js';
@@ -47,6 +48,13 @@ app.post('/game/:gameId/action',
     res.send({
       success
     })
+})
+
+app.get('/', (req, res)=>{
+  console.log('get /')
+  let cookie = req.headers.cookie?.split("; ").find(e=>e.split("=")[0]== 'clientId')
+  if (!cookie) res.cookie('clientId', randomUUID())
+  res.sendFile(path.join(process.cwd(),'index.html'))
 })
 
 const server = app.listen(port, () => {
